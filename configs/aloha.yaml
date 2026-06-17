@@ -1,0 +1,43 @@
+# Config for ALOHA single-arm teleoperation / recording.
+#
+# Usage:
+#   lerobot-teleoperate --config_path configs/aloha.yaml --teleop.type=aloha_leader
+#   lerobot-record      --config_path configs/aloha.yaml --teleop.type=aloha_leader ...
+
+robot:
+  type: aloha
+  # ROS2 robot_name for the follower arm (must match the launched ALOHA node)
+  name: "follower_right"
+  # Interbotix robot model
+  robot: "aloha_vx300s"
+  # Move arm to start pose at the beginning of each episode
+  reset_arm_pose: true
+  # Move arm to sleep pose and disable torque on disconnect
+  shutdown_on: false
+
+  # -----------------------------------------------------------------------
+  # Cameras
+  # Find your RealSense serial numbers with: rs-enumerate-devices | grep Serial
+  # For OpenCV cameras, replace type with "opencv" and set index_or_path.
+  # -----------------------------------------------------------------------
+  cameras:
+    cam_high:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # overhead camera
+      width: 640
+      height: 480
+      fps: 30
+
+    cam_low:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # front-low camera
+      width: 640
+      height: 480
+      fps: 30
+
+    cam_right_wrist:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # right wrist camera
+      width: 640
+      height: 480
+      fps: 30

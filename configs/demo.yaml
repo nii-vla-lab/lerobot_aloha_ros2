@@ -1,0 +1,48 @@
+# Config for ALOHA Stationary policy inference (demo).
+#
+# Usage:
+#   lerobot-demo --config_path configs/demo.yaml --policy.path=<CHECKPOINT_PATH>
+
+# Natural language task description fed to the policy
+task: "Pick up the object and place it in the box."
+
+robot:
+  type: aloha_stationary
+  name: "follower"
+  robot: "aloha_vx300s"
+  reset_arm_pose: true
+  shutdown_on: false
+
+  # -----------------------------------------------------------------------
+  # Cameras
+  # Camera names and resolutions must match those used during training.
+  # Find your RealSense serial numbers with: rs-enumerate-devices | grep Serial
+  # -----------------------------------------------------------------------
+  cameras:
+    cam_high:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # overhead camera
+      width: 640
+      height: 480
+      fps: 30
+
+    cam_low:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # front-low camera
+      width: 640
+      height: 480
+      fps: 30
+
+    cam_left_wrist:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # left wrist camera
+      width: 640
+      height: 480
+      fps: 30
+
+    cam_right_wrist:
+      type: intelrealsense
+      serial_number_or_name: "XXXXXXXXXX"  # right wrist camera
+      width: 640
+      height: 480
+      fps: 30
