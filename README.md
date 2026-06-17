@@ -5,29 +5,70 @@ LeRobot plugin packages for ALOHA / ALOHA Stationary robots.
 This repository provides independently installable packages that follow the [LeRobot](https://github.com/huggingface/lerobot) plugin conventions.  
 Once installed, `lerobot-teleoperate`, `lerobot-record`, and `lerobot-demo` will automatically discover these packages — no changes to the LeRobot source code required.
 
-## Packages
-
-| Package | Type | Robot | `type` name |
-|---|---|---|---|
-| `lerobot_robot_aloha` | Robot (follower) | ALOHA single arm | `aloha` |
-| `lerobot_robot_aloha_stationary` | Robot (follower) | ALOHA Stationary dual arm | `aloha_stationary` |
-| `lerobot_teleoperator_aloha_leader` | Teleoperator (leader) | ALOHA leader arm | `aloha_leader` |
-| `lerobot_teleoperator_aloha_stationary_leader` | Teleoperator (leader) | ALOHA Stationary leader arm | `aloha_stationary_leader` |
-
 ## Prerequisites
 
 - Python 3.10+
+- ROS2 Humble
 - [LeRobot](https://github.com/huggingface/lerobot) installed in your environment
-- [Interbotix ROS2 Toolboxes](https://github.com/Interbotix/interbotix_ros_toolboxes) (ROS2 Humble)
+- [Interbotix ROS2 Toolboxes](https://github.com/Interbotix/interbotix_ros_toolboxes)
 - [ALOHA](https://github.com/tonyzhaozh/aloha) (`aloha.robot_utils`)
-
-> `interbotix` and `aloha` are only available in a ROS2 environment. Follow each project's installation guide before proceeding.
 
 ## Installation
 
-Install all packages at once using [uv](https://github.com/astral-sh/uv):
+### 1. ROS2 Humble
+
+Follow the [official ROS2 Humble installation guide](https://docs.ros.org/en/humble/Installation.html) for your platform, then source the setup file:
 
 ```bash
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 2. Interbotix XSArm
+
+Clone the ALOHA ROS2 workspace and run the Interbotix installer:
+
+```bash
+mkdir -p ~/interbotix_ws/src
+cd ~/interbotix_ws/src
+git clone <ALOHA_ROS2_REPO_URL>
+
+# Run the Interbotix XSArm installer (ROS2 Humble, AMD64)
+cd ~
+chmod +x interbotix_ws/src/aloha/xsarm_amd64_install.sh
+./interbotix_ws/src/aloha/xsarm_amd64_install.sh -d humble -n
+```
+
+Build the workspace:
+
+```bash
+cd ~/interbotix_ws
+colcon build --symlink-install --cmake-args -DPYTHON_EXECUTABLE=/usr/bin/python3.10
+source ~/interbotix_ws/install/setup.bash
+```
+
+### 3. LeRobot
+
+```bash
+git clone <LEROBOT_REPO_URL> && cd lerobot
+
+uv venv --python python3.10
+source .venv/bin/activate
+
+uv pip install -e .
+uv pip install -e ".[intelrealsense]"
+uv pip install "numpy<2"
+uv pip install transforms3d
+uv pip install modern_robotics
+uv pip install -e ".[pi]"  # required only for inference with the pi0 policy
+```
+
+### 4. lerobot_aloha
+
+With the LeRobot virtual environment active, install all plugin packages at once:
+
+```bash
+cd lerobot_aloha
 uv sync
 ```
 
@@ -41,8 +82,6 @@ uv pip install -e lerobot_teleoperator_aloha_stationary_leader
 ```
 
 ## Usage
-
-Make sure the ROS2 bringup for your ALOHA robot is running before executing any command below.
 
 Example config files are provided in the [`configs/`](configs/) directory.  
 Copy one and fill in your RealSense serial numbers before use.
@@ -59,7 +98,28 @@ configs/
 > rs-enumerate-devices | grep Serial
 > ```
 
-### Teleoperation
+### Calibration
+
+ALOHA and ALOHA Stationary do **not** require LeRobot calibration files. Joint calibration is managed entirely by Interbotix ROS2 and the ALOHA launch configuration. The `calibration_dir` field in the config is not needed and can be left unset.
+
+### Step 1 — ROS2 Launch
+
+**Required before teleoperation, data recording, and inference.**  
+Run the following in a dedicated terminal. Keep it running throughout the session.
+
+```bash
+ros2 launch aloha aloha_bringup.launch.py robot:=aloha_stationary
+```
+
+For single-arm ALOHA:
+
+```bash
+ros2 launch aloha aloha_bringup.launch.py robot:=aloha
+```
+
+### Step 2 — Teleoperation
+
+Open a new terminal with the LeRobot virtual environment active.
 
 ```bash
 # ALOHA Stationary (dual arm)
@@ -73,7 +133,9 @@ lerobot-teleoperate \
     --teleop.type=aloha_leader
 ```
 
-### Data Recording
+### Step 2 — Data Recording
+
+Open a new terminal with the LeRobot virtual environment active.
 
 ```bash
 lerobot-record \
@@ -89,43 +151,14 @@ lerobot-record \
     --dataset.fps=30
 ```
 
-### Inference
+### Step 2 — Inference
+
+Open a new terminal with the LeRobot virtual environment active.
 
 ```bash
 lerobot-demo \
     --config_path configs/demo.yaml \
     --policy.path=<POLICY_CHECKPOINT_PATH>
-```
-
-## Repository Structure
-
-```
-lerobot_aloha/
-├── pyproject.toml                          # uv workspace root (meta-package)
-├── lerobot_robot_aloha/
-│   ├── pyproject.toml
-│   └── src/lerobot_robot_aloha/
-│       ├── __init__.py
-│       ├── config_aloha.py
-│       └── aloha.py
-├── lerobot_robot_aloha_stationary/
-│   ├── pyproject.toml
-│   └── src/lerobot_robot_aloha_stationary/
-│       ├── __init__.py
-│       ├── config_aloha_stationary.py
-│       └── aloha_stationary.py
-├── lerobot_teleoperator_aloha_leader/
-│   ├── pyproject.toml
-│   └── src/lerobot_teleoperator_aloha_leader/
-│       ├── __init__.py
-│       ├── config_aloha_leader.py
-│       └── aloha_leader.py
-└── lerobot_teleoperator_aloha_stationary_leader/
-    ├── pyproject.toml
-    └── src/lerobot_teleoperator_aloha_stationary_leader/
-        ├── __init__.py
-        ├── config_aloha_stationary_leader.py
-        └── aloha_stationary_leader.py
 ```
 
 ## License

@@ -8,6 +8,13 @@ task: "Pick up the object and place it in the box."
 
 robot:
   type: aloha_stationary
+
+  # Optional: unique ID to distinguish multiple robots of the same type.
+  # Determines the calibration filename: <calibration_dir>/robots/aloha_stationary/<id>.json
+  # id: my_aloha_stationary
+
+  # calibration_dir is not required for ALOHA — calibration is managed by Interbotix ROS2.
+
   name: "follower"
   robot: "aloha_vx300s"
   reset_arm_pose: true

@@ -6,6 +6,13 @@
 
 robot:
   type: aloha_stationary
+
+  # Optional: unique ID to distinguish multiple robots of the same type.
+  # Determines the calibration filename: <calibration_dir>/robots/aloha_stationary/<id>.json
+  # id: my_aloha_stationary
+
+  # calibration_dir is not required for ALOHA — calibration is managed by Interbotix ROS2.
+
   # ROS2 robot_name prefix; right/left arms are resolved as <name>_right and <name>_left
   name: "follower"
   # Interbotix robot model
