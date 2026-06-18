@@ -113,6 +113,13 @@ class AlohaLeader(Teleoperator):
         self.bot.core.robot_set_operating_modes("group", "arm", "position")
         self.bot.core.robot_set_operating_modes("single", "gripper", "position")
 
+        # lerobot's teleoperate() never calls reset(), so run the opening
+        # ceremony (move to start pose) and then release torque here. Without
+        # this the leader stays torque-ON in position mode and cannot be
+        # back-driven by the operator.
+        self.reset()
+        torque_off(self.bot)
+
         logger.info("%s connected.", self)
 
     @property

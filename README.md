@@ -50,17 +50,18 @@ source ~/interbotix_ws/install/setup.bash
 ### 3. LeRobot
 
 ```bash
-git clone <LEROBOT_REPO_URL> && cd lerobot
+git clone https://github.com/huggingface/lerobot.git && cd lerobot
 
 uv venv --python python3.10
 source .venv/bin/activate
 
 uv pip install -e .
 uv pip install -e ".[intelrealsense]"
+uv pip install -e ".[viz]"
 uv pip install "numpy<2"
 uv pip install transforms3d
 uv pip install modern_robotics
-uv pip install -e ".[pi]"  # required only for inference with the pi0 policy
+uv pip install pyserial
 ```
 
 ### 4. lerobot_aloha

@@ -136,6 +136,12 @@ class AlohaStationary(Robot):
             bot.core.robot_set_motor_registers("single", "gripper", "current_limit", 300)
             torque_on(bot)
 
+        # Move the follower to its start pose at connect time, mirroring the
+        # leader's opening ceremony. robot.connect() runs before teleop.connect()
+        # in lerobot-record/teleoperate, so the follower reaches start_pose
+        # first instead of being skipped while the leader resets.
+        self.reset()
+
         for cam in self.cameras.values():
             cam.connect()
 
