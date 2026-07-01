@@ -62,6 +62,7 @@ uv pip install -e ".[dataset]"
 uv pip install transforms3d
 uv pip install modern_robotics
 uv pip install pyserial
+uv pip install pynput
 uv pip install "numpy<2"
 ```
 
@@ -152,6 +153,13 @@ lerobot-record \
     --dataset.reset_time_s=5 \
     --dataset.fps=30
 ```
+
+> Episode control (→ next episode, ← re-record, Esc stop) needs `pynput` **and** a real
+> display (`DISPLAY` set / an X or Wayland-with-XWayland session). If `pynput` is missing
+> or no display is available, LeRobot silently falls back to headless mode and the
+> keyboard shortcuts stop responding — check the venv with
+> `python -c "import pynput"` and run recording from a local graphical session, not a
+> bare SSH/tty session, if key presses aren't registering.
 
 ### Step 2 — Inference
 
