@@ -1,5 +1,7 @@
 # **LeRobot ALOHA Package**
 
+[English](README.md) | [日本語](README.ja.md)
+
 LeRobot plugin packages for ALOHA / ALOHA Stationary robots.
 
 This repository provides independently installable packages that follow the [LeRobot](https://github.com/huggingface/lerobot) plugin conventions.  
@@ -31,7 +33,7 @@ Clone the ALOHA ROS2 workspace and run the Interbotix installer:
 ```bash
 mkdir -p ~/interbotix_ws/src
 cd ~/interbotix_ws/src
-git clone <ALOHA_ROS2_REPO_URL>
+git clone git@github.com:nii-vla-lab/aloha_ros2_package.git
 
 # Run the Interbotix XSArm installer (ROS2 Humble, AMD64)
 cd ~
