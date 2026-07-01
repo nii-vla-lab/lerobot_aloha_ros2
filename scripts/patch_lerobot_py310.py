@@ -113,6 +113,12 @@ REPLACEMENTS = [
         "\n"
         "                log_say(f\"Recording episode {dataset.num_episodes}\", cfg.play_sounds)\n",
     ),
+    # --- pyav_utils: int.is_integer() fix (int has no .is_integer(), only float does) ---
+    (
+        "src/lerobot/datasets/pyav_utils.py",
+        "        if type_name in FFMPEG_INTEGER_OPTION_TYPES and not num_val.is_integer():\n",
+        "        if type_name in FFMPEG_INTEGER_OPTION_TYPES and isinstance(num_val, float) and not num_val.is_integer():\n",
+    ),
     # --- lerobot-teleoperate: connect follower before leader ---
     (
         "src/lerobot/scripts/lerobot_teleoperate.py",

@@ -58,10 +58,11 @@ source .venv/bin/activate
 uv pip install -e .
 uv pip install -e ".[intelrealsense]"
 uv pip install -e ".[viz]"
-uv pip install "numpy<2"
+uv pip install -e ".[dataset]"
 uv pip install transforms3d
 uv pip install modern_robotics
 uv pip install pyserial
+uv pip install "numpy<2"
 ```
 
 ### 4. lerobot_aloha
